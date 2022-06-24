@@ -29,7 +29,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 lateinit var permissionLauncher: ActivityResultLauncher<String>
 lateinit var viewModel: MainViewModel
-var heartRateData: String = "00.0"
+var heartRateData: MutableState<String> = mutableStateOf("00.0")
 var checkedState: MutableState<Boolean> = mutableStateOf(false)
 
 @AndroidEntryPoint
@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
 
         lifecycleScope.launchWhenStarted {
             viewModel.latestHeartRate.collect {
-                heartRateData = it.toString()
+                heartRateData.value = it.toString()
             }
         }
 
@@ -94,7 +94,7 @@ fun MainApp() {
                     )
                     Text(
                         modifier = Modifier.padding(horizontal = 8.dp),
-                        text = heartRateData
+                        text = heartRateData.value
                     )
                 }
             }
